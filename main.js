@@ -1,6 +1,7 @@
 const electron = require('electron')
 // Module to control application life.
 const app = electron.app
+app.commandLine.appendSwitch("ignore-certificate-errors");
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow
 
@@ -16,11 +17,20 @@ function createWindow () {
   mainWindow = new BrowserWindow({width: 800, height: 600})
 
   // and load the index.html of the app.
-  mainWindow.loadURL(url.format({
-    pathname: path.join(__dirname, 'index.html'),
-    protocol: 'file:',
-    slashes: true
-  }))
+  // mainWindow.loadURL(url.format({
+  //   pathname: path.join(__dirname, 'index.html'),
+  //   protocol: 'file:',
+  //   slashes: true
+  // }))
+
+  mainWindow.webContents.session.setProxy({proxyRules:"https=192.168.99.100:3128;http=192.168.99.100:3128"}, function () {
+      // mainWindow.loadURL('https://whatismyipaddress.com/');
+      mainWindow.loadURL(url.format({
+        pathname: path.join(__dirname, 'index.html'),
+        protocol: 'file:',
+        slashes: true
+      }))
+  });
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
